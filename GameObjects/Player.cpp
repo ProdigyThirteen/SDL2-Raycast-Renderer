@@ -14,7 +14,13 @@ Player::Player()
     InputManager::instance().BindKey(SDL_SCANCODE_LEFT, InputManager::KeypressType::KEYHELD, std::bind(&Player::RotateLeft, this));
     InputManager::instance().BindKey(SDL_SCANCODE_RIGHT, InputManager::KeypressType::KEYHELD, std::bind(&Player::RotateRight, this));
 
-    _camera = RenderInstanceManager::instance().GetRenderer(0)->GetCamera();
+    //DAN
+    //auto rim = RenderInstanceManager::instance();
+    auto r = RenderInstanceManager::instance().GetRenderer("main");
+    Camera* c = RenderInstanceManager::instance().GetRenderer("main")->GetCamera();
+    //DAN
+
+    _camera = RenderInstanceManager::instance().GetRenderer("main")->GetCamera();
 }
 
 Player::~Player()

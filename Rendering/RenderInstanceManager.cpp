@@ -16,22 +16,35 @@ RenderInstanceManager::~RenderInstanceManager()
     ClearRenderers();
 }
 
-std::shared_ptr<GameRenderer> RenderInstanceManager::AddRenderer()
+GameRenderer* RenderInstanceManager::AddRenderer(const char* id)
 {
-    std::cout << "Default Renderer addition not implemented" << std::endl;
-    return nullptr;
+    if (_renderers.find(id) == _renderers.end())
+    {
+        _renderers[id] = std::unique_ptr<GameRenderer>(new GameRenderer(GameWindow::instance().GetWindow(), id));
+        std::cout << "Renderer created" << std::endl;
+    }
+
+    return _renderers.at(id).get();
 }
 
-std::shared_ptr<RaycastRenderer> RenderInstanceManager::AddRaycastRenderer()
+RaycastRenderer* RenderInstanceManager::AddRaycastRenderer(const char* id)
 {
-    _renderers.push_back(std::make_shared<RaycastRenderer>(GameWindow::instance().GetWindow(), "main"));
+    if (_renderers.find(id) == _renderers.end())
+    {
+        _renderers[id] = std::unique_ptr<RaycastRenderer>(new RaycastRenderer(GameWindow::instance().GetWindow(), id));
+        std::cout << "Renderer " << id << " created" << std::endl;
+    }
 
-    return std::dynamic_pointer_cast<RaycastRenderer>(_renderers.back());
+    return static_cast<RaycastRenderer*>(_renderers.at(id).get());
 }
 
-void RenderInstanceManager::RemoveRenderer()
+void RenderInstanceManager::RemoveRenderer(const char* id)
 {
-    std::cout << "Render removal not implemented" << std::endl;
+    if (_renderers.find(id) != _renderers.end())
+    {
+        _renderers.erase(id);
+        std::cout << "Renderer " << id << " destroyed" << std::endl;
+    }
 }
 
 void RenderInstanceManager::ClearRenderers()
@@ -40,11 +53,15 @@ void RenderInstanceManager::ClearRenderers()
     std::cout << "Destroyed all renderers" << std::endl;
 }
 
-std::shared_ptr<GameRenderer> RenderInstanceManager::GetRenderer(int index)
+GameRenderer* RenderInstanceManager::GetRenderer(const char* id)
 {
-    if(index < _renderers.size())
-        return _renderers[index];
-
+    //DAN
+    GameRenderer* renderer = &*_renderers[id].get();
+    //DAN
+    if (_renderers.find(id) != _renderers.end())
+    {
+        return _renderers[id].get();
+    }
     std::cout << "Renderer not found" << std::endl;
     return nullptr;
 }

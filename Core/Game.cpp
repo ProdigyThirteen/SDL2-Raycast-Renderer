@@ -36,13 +36,14 @@ bool Game::Init()
         return false;
     }
 
-    if (!RenderInstanceManager::instance().AddRaycastRenderer())
+    //if (!RenderInstanceManager::instance().AddRaycastRenderer())
+    if (!RenderInstanceManager::instance().AddRaycastRenderer("main"))
     {
         std::cout << "GameRenderer::Init failed" << std::endl;
         return false;
     }
 
-    RenderInstanceManager::instance().GetRenderer(0)->Init();
+    RenderInstanceManager::instance().GetRenderer("main")->Init();
 
     ret = InputManager::instance().Init();
     if (!ret)
